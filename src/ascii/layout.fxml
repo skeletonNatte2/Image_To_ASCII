@@ -35,7 +35,7 @@
                   maxHeight="675"
                   style="-fx-background-color: black;">
            <children>
-               <Text fx:id="asciiImage" fill="WHITE" wrappingWidth="675.002">
+               <Text fx:id="asciiText" fill="WHITE" wrappingWidth="675.002">
                    <font> <Font name="Courier New Bold" size="10.0"/> </font>
                </Text>
            </children>

@@ -11,26 +11,26 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 
 public class Controller {
     @FXML
-    private Text asciiImage;
+    private Text asciiText;
     @FXML
     private ImageView imageView;
     @FXML
     private Slider rowSlider;
 
     private Image image;
-    private double aspectRatio;
+    private AsciiImage asciiImage;
 
     private Font font;
 
     public Controller() {
-        this.aspectRatio = 1.0;
+        this.asciiImage = new AsciiImage(0,0);
+        this.image = null;
     }
 
     @FXML
@@ -48,30 +48,33 @@ public class Controller {
             System.err.println("Font file not found!");
         }
 
-        this.asciiImage.setFont(this.font);
+        this.asciiText.setFont(this.font);
 
         updateRes();
     }
 
     @FXML
     private void updateRes() {
+        double aspectRatio = 1.0;
+        if(this.image != null) {
+            aspectRatio = this.image.getWidth() / this.image.getHeight();
+        }
+
         double sliderValue = rowSlider.getValue();
 
         int rows = (int) sliderValue;
         int cols  = (int) sliderValue;
-
-        if(this.aspectRatio < 1.0) {
-            cols = (int) (sliderValue * this.aspectRatio);
+        if(aspectRatio < 1.0) {
+            cols = (int) (sliderValue * aspectRatio);
         } else {
-            rows = (int) (sliderValue / this.aspectRatio);
+            rows = (int) (sliderValue / aspectRatio);
         }
+        this.asciiImage.setSize(cols, rows);
 
-        double width = Math.floor(asciiImage.getLayoutBounds().getWidth());
-
+        double width = Math.floor(asciiText.getLayoutBounds().getWidth());
         double fontSize = width / this.rowSlider.getValue();
-
         this.font = new Font(this.font.getFamily(), fontSize);
-        asciiImage.setFont(this.font);
+        asciiText.setFont(this.font);
 
         StringBuilder sb = new StringBuilder();
         for(int r = 0; r < rows; r++) {
@@ -83,8 +86,8 @@ public class Controller {
                 sb.append("\n");
             }
         }
-
-        asciiImage.setText(sb.toString());
+        this.asciiImage.setImage(sb.toString());
+        asciiText.setText(asciiImage.toString());
     }
 
     @FXML
@@ -102,7 +105,6 @@ public class Controller {
         Image image = ImageIO.read(selectedFilePath);
         this.image = image;
         assert image != null;
-        this.aspectRatio = image.getWidth() / image.getHeight();
 
         this.imageView.setImage(this.image);
 
