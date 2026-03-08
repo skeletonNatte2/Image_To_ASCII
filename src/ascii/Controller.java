@@ -70,28 +70,19 @@ public class Controller {
         } else {
             rows = (int) (sliderValue / aspectRatio);
         }
-        this.asciiImage.setSize(cols, rows);
 
         double width = Math.floor(asciiText.getLayoutBounds().getWidth());
         double fontSize = width / this.rowSlider.getValue();
         this.font = new Font(this.font.getFamily(), fontSize);
         asciiText.setFont(this.font);
 
-        StringBuilder sb = new StringBuilder();
-        for(int r = 0; r < rows; r++) {
-            for(int c = 0; c < cols; c++) {
-                sb.append((int)(Math.random()*10));
-                //sb.append(Math.random() < 0.5 ? " " : "#");
-            }
-            if (r < rows - 1) {
-                sb.append("\n");
-            }
-        }
-        this.asciiImage.setImage(sb.toString());
-        asciiText.setText(asciiImage.toString());
+        if(this.image != null) {
+            this.pixelatedImage = ImageManipulator.pixelate(this.image, cols, rows);
+            this.imageView.setImage(this.pixelatedImage);
 
-        this.pixelatedImage = ImageManipulator.pixelate(this.image,cols,rows);
-        this.imageView.setImage(this.pixelatedImage);
+            this.asciiImage = ImageManipulator.toAsciiImage(this.pixelatedImage);
+            this.asciiText.setText(this.asciiImage.toString());
+        }
     }
 
     @FXML
@@ -111,7 +102,6 @@ public class Controller {
         assert image != null;
 
         updateRes();
-
-        this.imageView.setImage(this.pixelatedImage);
+        this.imageView.setImage(this.image);
     }
 }
