@@ -24,6 +24,7 @@ public class Controller {
     private Slider rowSlider;
 
     private Image image;
+    private Image pixelatedImage;
     private AsciiImage asciiImage;
 
     private Font font;
@@ -88,6 +89,9 @@ public class Controller {
         }
         this.asciiImage.setImage(sb.toString());
         asciiText.setText(asciiImage.toString());
+
+        this.pixelatedImage = ImageManipulator.pixelate(this.image,cols,rows);
+        this.imageView.setImage(this.pixelatedImage);
     }
 
     @FXML
@@ -106,8 +110,8 @@ public class Controller {
         this.image = image;
         assert image != null;
 
-        this.imageView.setImage(this.image);
-
         updateRes();
+
+        this.imageView.setImage(this.pixelatedImage);
     }
 }
