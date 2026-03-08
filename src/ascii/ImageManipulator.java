@@ -35,10 +35,31 @@ public class ImageManipulator {
         PixelWriter pixelWriter = pixelated.getPixelWriter();
         for(int x = 0; x < pixelWidth; x++) {
             for(int y = 0; y < pixelHeight; y++) {
-                int pixelX = (int) Math.min(x*blockWidth, width-1);
-                int pixelY = (int) Math.min(y*blockHeight, height-1);
-                int pixel = pixelReader.getArgb(pixelX, pixelY);
-                pixelWriter.setArgb(x, y, pixel);
+                int sumR = 0;
+                int sumG = 0;
+                int sumB = 0;
+                int count = 0;
+                for(int i = 0; i < blockWidth; i++) {
+                    for(int j = 0; j < blockHeight; j++) {
+                        int pixelX = Math.min((int)(x * blockWidth + i), (int)width - 1);
+                        int pixelY = Math.min((int)(y * blockHeight + j), (int)height - 1);
+                        int pixel = pixelReader.getArgb(pixelX, pixelY);
+
+                        sumR += (pixel & 0x00FF0000) >> 16;
+                        sumG += (pixel & 0x0000FF00) >> 8;
+                        sumB += pixel & 0x000000FF;
+
+                        count++;
+                    }
+                }
+
+                double numPixels = (blockWidth * blockHeight);
+
+                int r = sumR / count;
+                int g = sumG / count;
+                int b = sumB / count;
+                int argb = (0xFF << 24) | (r << 16) | (g << 8) | b;
+                pixelWriter.setArgb(x, y, argb);
             }
         }
 
@@ -77,7 +98,7 @@ public class ImageManipulator {
         int b = argb & 0x000000FF;
         double rgbBrightness = (double)(r + g + b) / 3.0;
         rgbBrightness /= 255.0;
-        rgbBrightness = Math.pow(rgbBrightness, 1.5);
+        rgbBrightness = Math.pow(rgbBrightness, 1.25);
 
         char rgbChar = ' ';
 
