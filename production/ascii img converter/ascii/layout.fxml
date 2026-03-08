@@ -25,10 +25,12 @@
       fx:controller="ascii.Controller">
    <children>
       <ImageView fx:id="imageView"
+                 smooth="false"
                  fitHeight="200.0"
                  fitWidth="200.0"
-                 pickOnBounds="true"
-                 preserveRatio="true" />
+
+                 preserveRatio="true"
+                 style="-fx-image-rendering: pixelated;" />
        <StackPane prefHeight="675.0"
                   prefWidth="675.0"
                   maxWidth="675"
