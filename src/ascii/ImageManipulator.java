@@ -122,7 +122,8 @@ public class ImageManipulator {
         int b = argb & 0x000000FF;
         double rgbBrightness = (double)(r + g + b) / 3.0;
         rgbBrightness /= 255.0;
-        rgbBrightness = -6 * Math.pow(rgbBrightness, 3.5) * (rgbBrightness/3 - 0.5);
+        rgbBrightness = Math.pow(rgbBrightness, 1.5);
+        //rgbBrightness = -6 * Math.pow(rgbBrightness, 3.5) * (rgbBrightness/3 - 0.5);
 
         char rgbChar = ' ';
 
