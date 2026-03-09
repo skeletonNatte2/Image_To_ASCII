@@ -49,6 +49,9 @@
             <Button mnemonicParsing="false"
                     text="Open"
                     onAction="#open" />
+             <Button mnemonicParsing="false"
+                     text="Save"
+                     onAction="#save" />
             <Slider fx:id="rowSlider"
                     max="175.0"
                     min="5.0"
