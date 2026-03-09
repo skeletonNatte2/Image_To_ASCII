@@ -17,6 +17,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 
+/**
+ * java fx controller class
+ */
 public class Controller {
     @FXML
     private Text asciiText;
@@ -32,14 +35,17 @@ public class Controller {
     private Font font;
 
     public Controller() {
-        this.asciiImage = new AsciiImage(0,0);
+        this.asciiImage = new AsciiImage();
         this.image = null;
     }
 
+    /**
+     * sets font
+     */
     @FXML
     public void initialize() {
         String fontName = "Mx437_Acer_VGA_8x8";
-        try(InputStream inputStream = getClass().getResourceAsStream( fontName + ".ttf")) {
+        try(InputStream inputStream = getClass().getResourceAsStream( "fonts/" + fontName + ".ttf")) {
             if(inputStream != null) {
                 this.font = Font.loadFont(inputStream,0);
             } else {
@@ -56,6 +62,9 @@ public class Controller {
         updateRes();
     }
 
+    /**
+     * changes the resolution of the ascii image based on slider
+     */
     @FXML
     private void updateRes() {
         double aspectRatio = 1.0;
@@ -80,7 +89,6 @@ public class Controller {
 
         if(this.image != null) {
             this.pixelatedImage = ImageManipulator.pixelate(this.image, cols, rows);
-            this.imageView.setImage(this.pixelatedImage);
 
             this.asciiImage = ImageManipulator.toAsciiImage(this.pixelatedImage);
             this.asciiText.setText(this.asciiImage.toString());
@@ -92,6 +100,11 @@ public class Controller {
         FileIO.saveAscii(this.asciiImage, window);
     }
 
+    /**
+     * opens a user specified image file
+     *
+     * @param e button event
+     */
     @FXML
     public void open(Event e) {
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();

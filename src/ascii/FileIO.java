@@ -63,17 +63,5 @@ public final class FileIO {
             }
         }
     }
-
-    /**
-     * Gets a hex string of the form "#RRGGBB" from an argb int
-     * of the form (in hexadecimal) aaRRGGBB.
-     * @param value argb int
-     * @return Hex string of the form "#RRGGBB"
-     */
-    private static String argbIntToRgbHex(int value) {
-        final int rgbOnly = 0x00FFFFFF;
-        int rgbOnlyValue = value & rgbOnly;
-        return String.format("#%X", rgbOnlyValue);
-    }
 }
 

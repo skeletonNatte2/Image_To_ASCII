@@ -5,11 +5,14 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 
+/**
+ * class for handling image manipulation
+ */
 public class ImageManipulator {
-    private static final String asciiByBrightness = " .',`-_:~^;|/\\+=<>()!{}[]?71%3$*205694&8@#";
-    private static final int maxBrightness = 34;
+    //private static final String asciiByBrightness = " .',`-_:~^;|/\\+=<>()!{}[]?71%3$*205694&8@#";
+    private static final int maxBrightness = 33;
     private static final double[] brightnessValues = {
-            0,5,6,9,11,14,16,17,18,19,21,23,25,26,27,28,29,31,32,maxBrightness
+            0,2,4,6,8,14,16,17,18,19,21,23,25,26,27,28,29,31,32,maxBrightness
     };
     private static final String[] uniqueBrightnessStrings = {
             " .-:~+!}?7%3$094&8@#",
@@ -18,6 +21,14 @@ public class ImageManipulator {
             " .`:~>!{?713*X94&8@#"
     };
 
+    /**
+     * pixelates an image
+     *
+     * @param image input image
+     * @param pixelWidth desired width in pixels
+     * @param pixelHeight desired height in pixels
+     * @return pixelated image
+     */
     public static Image pixelate(Image image, int pixelWidth, int pixelHeight) {
         if(image == null) {
             return null;
@@ -33,12 +44,14 @@ public class ImageManipulator {
 
         PixelReader pixelReader = image.getPixelReader();
         PixelWriter pixelWriter = pixelated.getPixelWriter();
+        //loop through each image pixelated image pixel
         for(int x = 0; x < pixelWidth; x++) {
             for(int y = 0; y < pixelHeight; y++) {
                 int sumR = 0;
                 int sumG = 0;
                 int sumB = 0;
                 int count = 0;
+                //average colors in this block
                 for(int i = 0; i < blockWidth; i++) {
                     for(int j = 0; j < blockHeight; j++) {
                         int pixelX = Math.min((int)(x * blockWidth + i), (int)width - 1);
@@ -53,8 +66,7 @@ public class ImageManipulator {
                     }
                 }
 
-                double numPixels = (blockWidth * blockHeight);
-
+                //write average color to pixelated image
                 int r = sumR / count;
                 int g = sumG / count;
                 int b = sumB / count;
@@ -66,6 +78,12 @@ public class ImageManipulator {
         return pixelated;
     }
 
+    /**
+     * turns given image into an ascii image
+     *
+     * @param image given image
+     * @return ascii image
+     */
     public static AsciiImage toAsciiImage(Image image) {
         if(image == null) {
             return null;
@@ -73,7 +91,7 @@ public class ImageManipulator {
 
         int width = (int) image.getWidth();
         int height = (int) image.getHeight();
-        AsciiImage result = new AsciiImage(width, height);
+        AsciiImage result = new AsciiImage();
 
         PixelReader pixelReader = image.getPixelReader();
 
@@ -92,13 +110,19 @@ public class ImageManipulator {
         return result;
     }
 
+    /**
+     * converts an argb int to a char with similar brightness
+     *
+     * @param argb argb int
+     * @return corresponding char
+     */
     private static char argbToChar(int argb) {
         int r = (argb & 0x00FF0000) >> 16;
         int g = (argb & 0x0000FF00) >> 8;
         int b = argb & 0x000000FF;
         double rgbBrightness = (double)(r + g + b) / 3.0;
         rgbBrightness /= 255.0;
-        rgbBrightness = Math.pow(rgbBrightness, 1.25);
+        rgbBrightness = -6 * Math.pow(rgbBrightness, 3.5) * (rgbBrightness/3 - 0.5);
 
         char rgbChar = ' ';
 
@@ -112,7 +136,8 @@ public class ImageManipulator {
             }
         }
 
-        String brightnessString = uniqueBrightnessStrings[(int)(Math.random()*4)];
+        int randomIdx = (int)(Math.random()*uniqueBrightnessStrings.length);
+        String brightnessString = uniqueBrightnessStrings[randomIdx];
         rgbChar = brightnessString.charAt(strIdx);
 
         return rgbChar;

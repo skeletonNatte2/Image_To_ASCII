@@ -1,33 +1,19 @@
 package ascii;
 
+/**
+ * supposed to be a class to represent ascii images
+ * literally just a string lol
+ * i have no idea why i made this its own class
+ */
 public class AsciiImage {
     private String imageString;
 
-    private int width;
-    private int height;
-
-    public AsciiImage(int width, int height) {
+    public AsciiImage() {
         this.imageString = "";
-
-        this.width = width;
-        this.height = height;
     }
 
     public void setImage(String imageString) {
         this.imageString = imageString;
-    }
-
-    public void setSize(int width,  int height) {
-        this.width = width;
-        this.height = height;
-    }
-
-    public int getWidth() {
-        return this.width;
-    }
-
-    public int getHeight() {
-        return this.height;
     }
 
     @Override
