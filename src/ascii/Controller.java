@@ -10,7 +10,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -85,6 +87,11 @@ public class Controller {
         }
     }
 
+    public void save(Event e) {
+        Window window = ((Node) e.getSource()).getScene().getWindow();
+        FileIO.saveAscii(this.asciiImage, window);
+    }
+
     @FXML
     public void open(Event e) {
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
@@ -95,9 +102,14 @@ public class Controller {
                 new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif")
         );
 
-        Path selectedFilePath = fileChooser.showOpenDialog(stage).toPath();
+        File file = fileChooser.showOpenDialog(stage);
+        if(file == null) {
+            return;
+        }
 
-        Image image = ImageIO.read(selectedFilePath);
+        Path selectedFilePath = file.toPath();
+
+        Image image = FileIO.read(selectedFilePath);
         this.image = image;
         assert image != null;
 
